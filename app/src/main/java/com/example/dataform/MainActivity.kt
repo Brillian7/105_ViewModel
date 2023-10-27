@@ -95,9 +95,13 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
     var textTlp by remember {
         mutableStateOf("")
     }
+    var textEmail by remember {
+        mutableStateOf("")
+    }
     var textAlamat by remember {
         mutableStateOf("")
     }
+
 
     val context = LocalContext.current
     val dataform: Dataform
@@ -126,6 +130,17 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
         }
     )
     OutlinedTextField(
+        value =textEmail ,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        shape = MaterialTheme.shapes.large,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(text = "Email")},
+        onValueChange = {
+            textEmail = it
+        }
+    )
+    OutlinedTextField(
         value = textAlamat,
         singleLine = true,
         shape = MaterialTheme.shapes.large,
@@ -142,7 +157,7 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
-        cobaViewModel.insertData(textNama,textTlp, textAlamat, dataform.sex)
+        cobaViewModel.insertData(textNama,textTlp, textEmail, textAlamat, dataform.sex)
         }
     ) {
         Text(
@@ -154,6 +169,7 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
     TextHasil(
         namanya = cobaViewModel.namaUsr,
         telponnya = cobaViewModel.noTlp,
+        Emailnya = cobaViewModel.Email,
         alamatnya = cobaViewModel.alamatUsr,
         jenisnya = cobaViewModel.jenisKl
     )
@@ -178,7 +194,7 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
 
 
 @Composable
-fun TextHasil(namanya: String, telponnya: String, alamatnya: String, jenisnya: String) {
+fun TextHasil(namanya: String, telponnya: String,Emailnya: String, alamatnya: String, jenisnya: String) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -193,6 +209,11 @@ fun TextHasil(namanya: String, telponnya: String, alamatnya: String, jenisnya: S
         )
         Text(
             text = "Telepon : " + telponnya,
+            modifier = Modifier
+                .padding(horizontal = 10.dp, vertical = 5.dp)
+        )
+        Text(
+            text = "Email : " + Emailnya,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 5.dp)
         )
