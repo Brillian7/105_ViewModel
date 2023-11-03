@@ -68,6 +68,7 @@ fun  SelectJK(
     Column(modifier = Modifier.padding(16.dp)){
         options.forEach{item ->
             Row(
+
                 modifier = Modifier.selectable(
                     selected = selectedValue == item,
                     onClick = {
@@ -86,6 +87,42 @@ fun  SelectJK(
         }
     }
 }
+@Composable
+fun  SelectStatus(
+    options: List<String>,
+    oneSelectionChanged: (String) -> Unit = {}
+){
+    var selectedValue by rememberSaveable { mutableStateOf("") }
+    Column {
+        Text(text = "status : ",
+            fontSize = 15.sp,
+            )
+    }
+    Row(
+        modifier = Modifier.padding(16.dp)
+    ){
+        options.forEach {item ->
+            Row(
+                modifier = Modifier.selectable(
+                    selected =  selectedValue == item,
+                    onClick = {
+                        selectedValue = item
+                        oneSelectionChanged(item)
+                    }
+                ),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                RadioButton(selected = selectedValue == item,
+                    onClick = {
+                        selectedValue == item
+                        oneSelectionChanged(item)
+                    })
+                Text(item)
+            }
+        }
+    }
+
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
@@ -101,6 +138,7 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
     var textAlamat by remember {
         mutableStateOf("")
     }
+
 
 
     val context = LocalContext.current
@@ -154,10 +192,14 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
         options = jenis.map { id -> context.resources.getString(id)},
         oneSelectionChanged = {cobaViewModel.setJenisK(it)}
     )
+    SelectStatus(
+        options = jenis.map { id -> context.resources.getString(id)},
+        oneSelectionChanged = {cobaViewModel.setStatusOrang(it)}
+    )
     Button(
         modifier = Modifier.fillMaxWidth(),
         onClick = {
-        cobaViewModel.insertData(textNama,textTlp, textEmail, textAlamat, dataform.sex)
+        cobaViewModel.insertData(textNama,textTlp, textEmail, textAlamat, dataform.sex, dataform.status)
         }
     ) {
         Text(
@@ -171,7 +213,8 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
         telponnya = cobaViewModel.noTlp,
         Emailnya = cobaViewModel.Email,
         alamatnya = cobaViewModel.alamatUsr,
-        jenisnya = cobaViewModel.jenisKl
+        jenisnya = cobaViewModel.jenisKl,
+        statusnya = cobaViewModel.Status
     )
 }
     @Composable
@@ -194,7 +237,7 @@ fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
 
 
 @Composable
-fun TextHasil(namanya: String, telponnya: String,Emailnya: String, alamatnya: String, jenisnya: String) {
+fun TextHasil(namanya: String, telponnya: String,Emailnya: String, alamatnya: String, jenisnya: String,statusnya: String) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -203,12 +246,17 @@ fun TextHasil(namanya: String, telponnya: String,Emailnya: String, alamatnya: St
             .fillMaxWidth()
     ){
         Text(
-            text = "Nama : " + namanya,
+            text = "Jenis Kelamin : " + jenisnya,
+            modifier = Modifier
+                .padding(horizontal = 10.dp, vertical = 5.dp)
+        )
+        Text(
+            text = "Status : " + statusnya,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 4.dp)
         )
         Text(
-            text = "Telepon : " + telponnya,
+            text = "Alamat : " + alamatnya,
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 5.dp)
         )
@@ -217,16 +265,8 @@ fun TextHasil(namanya: String, telponnya: String,Emailnya: String, alamatnya: St
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 5.dp)
         )
-        Text(
-            text = "Alamat : " + alamatnya,
-            modifier = Modifier
-                .padding(horizontal = 10.dp, vertical = 5.dp)
-        )
-        Text(
-            text = "Jenis Kelamin : " + jenisnya,
-            modifier = Modifier
-                .padding(horizontal = 10.dp, vertical = 5.dp)
-        )
+
+
     }
 }
 @Composable
